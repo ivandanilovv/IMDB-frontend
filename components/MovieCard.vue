@@ -16,6 +16,9 @@
       <div>
         <i class="fa fa-calendar" aria-hidden="true"></i><span class="m-0 ms-2">{{movie.year}}</span>
       </div>
+      <div>
+        <i class="fa fa-calendar" aria-hidden="true"></i><span class="m-0 ms-2">Quantity: {{movie.quantity}}</span>
+      </div>
       <div class="d-flex flex-row align-items-center justify-content-between">
         <div class="d-flex flex-row align-items-center justify-content-start">
           <i class="fa fa-star fa-2x text-warning" aria-hidden="true"/>
@@ -33,6 +36,22 @@
           &#x1F6C8;
         </NuxtLink>
       </div>
+      <form @submit.prevent="AddToCart(movie.id)">
+          <div>
+            <label for="quantity" class="form-label">Quantity: </label>
+            <input type="number" name="quantity" id="quantity" v-model="cartItem.quantity" class="form-control"/>
+          </div>
+          <div>
+<!--            <a :href="'http://localhost:8080/addToCart?id=' + movie.id + '&quantity=' + quantity"-->
+<!--               id="addToCart" class="text-decoration-none text-warning fs-3 px-3 py-2 rounded-5"-->
+<!--                      title="Add to cart">-->
+<!--              &#x1F6C8;-->
+<!--            </a>-->
+            <button type="submit" class="btn btn-warning text-white mt-2 mt-sm-0">
+              Add to cart
+            </button>
+          </div>
+      </form>
     </div>
     <div v-if="!movies.length">
       No movies found!
@@ -45,6 +64,30 @@ export default {
   name: "MovieCard",
   props: {
     movies: Array,
+  },
+  data() {
+    return {
+      quantity: 1,
+      cartItem: {
+        id: '',
+        quantity: ''
+      }
+    }
+  },
+  methods: {
+    AddToCart(id) {
+      console.log('test');
+      const formData = new FormData();
+      formData.append('id', id);
+      formData.append('quantity', this.cartItem.quantity);
+      this.$axios.post('http://localhost:8080/addToCart', formData, { withCredentials: true })
+        .then((res) => {
+          console.log(res.status);
+          if (res.status === 200) {
+            window.location.href = 'http://localhost:3000/movies'
+          }
+        })
+    }
   }
 }
 </script>

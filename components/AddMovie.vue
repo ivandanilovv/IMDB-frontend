@@ -23,6 +23,11 @@
           <input type="number" min="1900" class="form-control" id="year" v-model="movie.year"
                  placeholder="Enter release year:" required>
         </div>
+        <div class="mb-3">
+          <label for="quantity" class="form-label fs-4">Quantity:</label>
+          <input type="number" min="1" class="form-control" id="quantity" v-model="movie.quantity"
+                 placeholder="Enter quantity:" required>
+        </div>
         <button type="submit" class="btn btn-warning text-white fw-bold">Submit</button>
         <div class="progress mt-3" style="height: 20px;">
           <div class="progress-bar progress-bar-striped bg-warning" role="progressbar"
@@ -48,6 +53,7 @@ export default {
         description: '',
         genre: '',
         year: '',
+        quantity: '',
       },
       currentYear: new Date(),
       flagHome: false,
@@ -71,6 +77,7 @@ export default {
       formData.append('description', this.movie.description);
       formData.append('genre', this.movie.genre);
       formData.append('year', this.movie.year);
+      formData.append('quantity', this.movie.quantity);
       this.$axios.post('http://localhost:8080/movies', formData, {})
         .then((res) => {
           console.log(res.status);
